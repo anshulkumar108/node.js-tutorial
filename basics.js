@@ -3,6 +3,8 @@
 
 const readline = require('readline');
 const fs = require('fs');
+
+
 // const rl=readline.createInterface({
 //     input: process.stdin,
 //     output: process.stdout,
@@ -35,19 +37,39 @@ const fs = require('fs');
 
 // //READING FILE ASYNCHRONOUSLY.
 // //outpiut of readfile assigned to data.
-fs.readFile('./Files/start.txt', 'utf-8', (err, data) => {
-    console.log(data);
-    fs.readFile(`./Files/${data}.txt`, 'utf-8', (err, data2) => {
-        //we are not calling this readFile function outside callback function because we want to run his readfile function after 
-        // completing of previous readFile function that is data output.
-        console.log(data2);
-        fs.readFile(`./Files/append.txt`, 'utf-8', (err,data4)=>{
-                     console.log(data4);
-                     fs.writeFile(`./Files/output.txt`,`${data2}\n\n ${data4}\n\n date created : ${new Date()}`,()=>{
-                        console.log('file writen successfully')
-                    })
-        })
-    });
-})//this readFile run asynchronously so it will run in background as it completed its output stored in data.and it will be pused to main thread.
+// fs.readFile('./Files/start.txt', 'utf-8', (err, data) => {
+//     console.log(data);
+//     fs.readFile(`./Files/${data}.txt`, 'utf-8', (err, data2) => {
+//         //we are not calling this readFile function outside callback function because we want to run his readfile function after 
+//         // completing of previous readFile function that is data output.
+//         console.log(data2);
+//         fs.readFile(`./Files/append.txt`, 'utf-8', (err,data4)=>{
+//                      console.log(data4);
+//                      fs.writeFile(`./Files/output.txt`,`${data2}\n\n ${data4}\n\n date created : ${new Date()}`,()=>{
+//                         console.log('file writen successfully')
+//                     })
+//         })
+//     });
+// })//this readFile run asynchronously so it will run in background as it completed its output stored in data.and it will be pused to main thread.
 
-// console.log('reading  file......'); // first this line executed
+//******************************************************************************************************/
+//*********************************************************************************************************//
+// READING FILES ASYNCHRONOUSLY. using async await functions
+
+const util = require('util');
+const readFileAsync = util.promisify(fs.readFile);
+
+async function readfiles(){
+
+    try {
+        let data= await readFileAsync('./Files/start.txt','utf-8');
+        let data2= await readFileAsync(`./Files/${data}.txt`,'utf-8'); 
+        let data3 = await readFileAsync(`./Files/append.txt`,'utf-8');
+        console.log(`${data}\n\n ${data2}\n\n date created : ${new Date()}`)
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+ console.log('reading  file......'); // first this line executed
+ readfiles(); // second this line executed
