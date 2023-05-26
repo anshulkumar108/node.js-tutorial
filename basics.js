@@ -3,31 +3,32 @@
 
 const readline = require('readline');
 const fs = require('fs');
-const rl=readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
+// const rl=readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout,
+// });
 
-rl.question("please enter your name",(name)=>{
-    console.log("you entered :" + name);
-    rl.close() //The rl.close() method closes the Interface instance and relinquishes control over the input and output streams. When called, the 'close' event will be emitted
+// rl.question("please enter your name",(name)=>{
+//     console.log("you entered :" + name);
+//     rl.close() //The rl.close() method closes the Interface instance and relinquishes control over the input and output streams. When called, the 'close' event will be emitted
 
-});
+// });
 
-rl.on( 'close',()=>{
-    console.log("Interface is closed");
-    process.exit(0)//The process.exit() method instructs Node.js to terminate the process synchronously with an exit status of code. 
-})//Adds the listener function to the end of the listeners array for the event named eventName. 
+// rl.on( 'close',()=>{
+//     console.log("Interface is closed");
+//     process.exit(0)//The process.exit() method instructs Node.js to terminate the process synchronously with an exit status of code. 
+// })//Adds the listener function to the end of the listeners array for the event named eventName. 
 
 //*****************************************************************************************************************
 //************************************************************************************************** */
 //READING FILE SYNCHRONOUSLY
 
-// let textIn=fs.readFileSync('./Files/input.txt','utf-8');//readFileSync reads the input.txt file and once it read it .it will return content .
-// console.log(textIn);
+let textIn=fs.readFileSync('./Files/input.txt','utf-8');//readFileSync reads the input.txt file and once it read it .it will return content .
+console.log(textIn);
 
-// let content=`data read from input file: ${textIn} \n date : ${new Date()} \n`
-// let output=fs.writeFileSync('./Files/output.txt',content);
+let content=`data read from input file: ${textIn} \n date : ${new Date()} \n`
+let output=fs.writeFileSync('./Files/output.txt',content);
+
 
 //*********************************************************************************************************/
 
