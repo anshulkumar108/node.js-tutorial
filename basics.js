@@ -80,11 +80,21 @@ const http=require('http');
 const html=fs.readFileSync('./template/index.html','utf-8')
 // STEP 1 : create A SERVER ********************************
 
+//whenever we are making request to server it getting that request inside this request parameter and request parameter has
+//property called URL.THIS url property is going to store value which user has entered after the root URL
 const server=http.createServer((request,response)=>{
-    response.end(html);
-    console.log("a new request recived");
-   // console.log(request)
-    //console.log(response)
+   let path=request.url
+   //response.end(path) // this give "/" as output
+
+   if(path ==='/' || path.toLocaleLowerCase() === '/home'){
+    response.end("you are in home page")
+   }else if(path.toLocaleLowerCase() === '/about'){
+    response.end("you are in about page")
+   }else if(path.toLocaleLowerCase() === '/content'){
+    response.end("you are in content page");
+   }else{
+    response.end("404 Error page not found");
+   }
 })
 
 //step 2 : start a server
