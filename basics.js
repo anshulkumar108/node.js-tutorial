@@ -3,7 +3,7 @@
 
 const readline = require('readline');
 const fs = require('fs');
-const http=require('http');
+const http = require('http');
 
 // const rl=readline.createInterface({
 //     input: process.stdin,
@@ -78,7 +78,8 @@ const http=require('http');
 //
 //CREATING A SIMPLE WEB SERVER ********************************
 
-const html=fs.readFileSync('./template/index.html','utf-8')
+const html = fs.readFileSync('./template/index.html', 'utf-8')
+const product = JSON.parse(fs.readFileSync('./data/product.json', 'utf-8'))
 // STEP 1 : create A SERVER ********************************
 
 //whenever we are making request to server it getting that request inside this request parameter and request parameter has
@@ -86,39 +87,44 @@ const html=fs.readFileSync('./template/index.html','utf-8')
 
 // in node js we can't use static files.static means which might need in our node application ex:css files,image files,script files.
 
-const server=http.createServer((request,response)=>{
-   let path=request.url
-   //response.end(path) // this give "/" as output
+const server = http.createServer((request, response) => {
+    let path = request.url
+    //response.end(path) // this give "/" as output
 
-   if(path ==='/' || path.toLocaleLowerCase() === '/home'){
-    response.writeHead(200, {
-        'Content-Type': 'text/html',
-        'my-header'  :'hello world!' //custome header
-})
-    response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
-   }else if(path.toLocaleLowerCase() === '/about'){
-    response.writeHead(200, {
-        'Content-Type': 'text/html',
-        'my-header'  :'hello world!' //custome header
-})
-    response.end(html.replace('{{%CONTENT%}}',"you are in about page"))
-   }else if(path.toLocaleLowerCase() === '/content'){
-    response.writeHead(200, {
-        'Content-Type': 'text/html',
-        'my-header'  :'hello world!' //custome header
-})
-    response.end(html.replace('{{%CONTENT%}}',"you are in content page"));
-   }else{
-    response.writeHead(404, {
-        'Content-Type': 'text/html',
-        'my-header'  :'hello world!' //custome header
-})
-    response.end(html.replace('{{%CONTENT%}}',"404 Error page not found"));
-   }
+    if (path === '/' || path.toLocaleLowerCase() === '/home') {
+        response.writeHead(200, {
+            'Content-Type': 'text/html',
+            'my-header': 'hello world!' //custome header
+        })
+        response.end(html.replace('{{%CONTENT%}}', "you are in home page"))
+    } else if (path.toLocaleLowerCase() === '/about') {
+        response.writeHead(200, {
+            'Content-Type': 'text/html',
+            'my-header': 'hello world!' //custome header
+        })
+        response.end(html.replace('{{%CONTENT%}}', "you are in about page"))
+    } else if (path.toLocaleLowerCase() === '/content') {
+        response.writeHead(200, {
+            'Content-Type': 'text/html',
+            'my-header': 'hello world!' //custome header
+        })
+        response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
+    } else if (path.toLocaleLowerCase() === '/products') {
+
+        response.writeHead(200, { 'Content-Type': 'application/json', })
+        response.end("you are in products page")
+
+    } else {
+        response.writeHead(404, {
+            'Content-Type': 'text/html',
+            'my-header': 'hello world!' //custome header
+        })
+        response.end(html.replace('{{%CONTENT%}}', "404 Error page not found"));
+    }
 })
 
 //step 2 : start a server
 
-server.listen(8000,'127.0.0.1',()=>{
+server.listen(8000, '127.0.0.1', () => {
     console.log("server is running on port 8000");
 })
