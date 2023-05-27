@@ -3,7 +3,7 @@
 
 const readline = require('readline');
 const fs = require('fs');
-
+const http=require('http');
 
 // const rl=readline.createInterface({
 //     input: process.stdin,
@@ -56,20 +56,38 @@ const fs = require('fs');
 //*********************************************************************************************************//
 // READING FILES ASYNCHRONOUSLY. using async await functions
 
-const util = require('util');
-const readFileAsync = util.promisify(fs.readFile);
+// const util = require('util');
+// const readFileAsync = util.promisify(fs.readFile);
 
-async function readfiles(){
+// async function readfiles(){
 
-    try {
-        let data= await readFileAsync('./Files/start.txt','utf-8');
-        let data2= await readFileAsync(`./Files/${data}.txt`,'utf-8'); 
-        let data3 = await readFileAsync(`./Files/append.txt`,'utf-8');
-        console.log(`${data}\n\n ${data2}\n\n date created : ${new Date()}`)
+//     try {
+//         let data= await readFileAsync('./Files/start.txt','utf-8');
+//         let data2= await readFileAsync(`./Files/${data}.txt`,'utf-8'); 
+//         let data3 = await readFileAsync(`./Files/append.txt`,'utf-8');
+//         console.log(`${data}\n\n ${data2}\n\n date created : ${new Date()}`)
 
-    } catch (error) {
-        console.log(error)
-    }
-}
- console.log('reading  file......'); // first this line executed
- readfiles(); // second this line executed
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+//  console.log('reading  file......'); // first this line executed
+//  readfiles(); // second this line executed
+
+//************************************************************** */
+//CREATING A SIMPLE WEB SERVER ********************************
+
+// STEP 1 : create A SERVER ********************************
+
+const server=http.createServer((request,response)=>{
+    response.end('we are receving the response vfrom server')
+    console.log("a new request recived");
+    console.log(request)
+    console.log(response)
+})
+
+//step 2 : start a server
+
+server.listen(4000,'127.0.0.1',()=>{
+    console.log("server is running on port 4000");
+})
