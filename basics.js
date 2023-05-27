@@ -77,17 +77,18 @@ const http=require('http');
 //************************************************************** */
 //CREATING A SIMPLE WEB SERVER ********************************
 
+const html=fs.readFileSync('./template/index.html','utf-8')
 // STEP 1 : create A SERVER ********************************
 
 const server=http.createServer((request,response)=>{
-    response.end('we are receving the response vfrom server')
+    response.end(html);
     console.log("a new request recived");
-    console.log(request)
-    console.log(response)
+   // console.log(request)
+    //console.log(response)
 })
 
 //step 2 : start a server
 
-server.listen(4000,'127.0.0.1',()=>{
-    console.log("server is running on port 4000");
+server.listen(8000,'127.0.0.1',()=>{
+    console.log("server is running on port 8000");
 })
