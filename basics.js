@@ -74,7 +74,8 @@ const http=require('http');
 //  console.log('reading  file......'); // first this line executed
 //  readfiles(); // second this line executed
 
-//************************************************************** */
+//***************************************************************/
+//
 //CREATING A SIMPLE WEB SERVER ********************************
 
 const html=fs.readFileSync('./template/index.html','utf-8')
@@ -90,12 +91,28 @@ const server=http.createServer((request,response)=>{
    //response.end(path) // this give "/" as output
 
    if(path ==='/' || path.toLocaleLowerCase() === '/home'){
+    response.writeHead(200, {
+        'Content-Type': 'text/html',
+        'my-header'  :'hello world!' //custome header
+})
     response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
    }else if(path.toLocaleLowerCase() === '/about'){
+    response.writeHead(200, {
+        'Content-Type': 'text/html',
+        'my-header'  :'hello world!' //custome header
+})
     response.end(html.replace('{{%CONTENT%}}',"you are in about page"))
    }else if(path.toLocaleLowerCase() === '/content'){
+    response.writeHead(200, {
+        'Content-Type': 'text/html',
+        'my-header'  :'hello world!' //custome header
+})
     response.end(html.replace('{{%CONTENT%}}',"you are in content page"));
    }else{
+    response.writeHead(404, {
+        'Content-Type': 'text/html',
+        'my-header'  :'hello world!' //custome header
+})
     response.end(html.replace('{{%CONTENT%}}',"404 Error page not found"));
    }
 })
