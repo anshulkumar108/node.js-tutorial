@@ -4,6 +4,7 @@
 const readline = require('readline');
 const fs = require('fs');
 const http = require('http');
+const { Console } = require('console');
 
 // const rl=readline.createInterface({
 //     input: process.stdin,
@@ -80,6 +81,20 @@ const http = require('http');
 
 const html = fs.readFileSync('./template/index.html', 'utf-8')
 const product = JSON.parse(fs.readFileSync('./data/product.json', 'utf-8'))
+const productList=fs.readFileSync("./template/product.html", 'utf-8')
+
+let productHTMLArray=product.map((prod)=>{
+ let output= productList.replace('{{%IMAGE%}}',prod.productImage)
+      output= output.replace('{{%NAME%}}',prod.name)
+      output= output.replace('{{%MODELNAME%}}',prod.modeName)
+      output= output.replace('{{%MODALNUMBER%}}',prod.modelNumber)
+      output= output.replace('{{%SIZE%}}',prod.size)
+      output= output.replace('{{%CAMERA%}}',prod.camera)
+      output= output.replace('{{%PRICE%}}',prod.price)
+      output= output.replace('{{%COLOR%}}',prod.color)
+
+      return output;
+})
 // STEP 1 : create A SERVER ********************************
 
 //whenever we are making request to server it getting that request inside this request parameter and request parameter has
@@ -92,16 +107,11 @@ const server = http.createServer((request, response) => {
     //response.end(path) // this give "/" as output
 
     if (path === '/' || path.toLocaleLowerCase() === '/home') {
-        response.writeHead(200, {
-            'Content-Type': 'text/html',
-            'my-header': 'hello world!' //custome header
-        })
-        response.end(html.replace('{{%CONTENT%}}', "you are in home page"))
+        response.writeHead(200, { 'Content-Type': 'text/html'})
+        response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
+        
     } else if (path.toLocaleLowerCase() === '/about') {
-        response.writeHead(200, {
-            'Content-Type': 'text/html',
-            'my-header': 'hello world!' //custome header
-        })
+        response.writeHead(200, {'Content-Type': 'text/html'})
         response.end(html.replace('{{%CONTENT%}}', "you are in about page"))
     } else if (path.toLocaleLowerCase() === '/content') {
         response.writeHead(200, {
@@ -110,9 +120,10 @@ const server = http.createServer((request, response) => {
         })
         response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
     } else if (path.toLocaleLowerCase() === '/products') {
-
-        response.writeHead(200, { 'Content-Type': 'application/json', })
-        response.end("you are in products page")
+        let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
+        response.writeHead(200, { 'Content-Type': 'text/html'})
+        response.end(productListResponse)
+   // console.log( productHTMLArray.join(',')); // using join we get single html file
 
     } else {
         response.writeHead(404, {
