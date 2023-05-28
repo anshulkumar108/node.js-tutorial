@@ -82,66 +82,67 @@ const url=require('url') // this url object has method called parse
 const html = fs.readFileSync('./template/index.html', 'utf-8')
 const product = JSON.parse(fs.readFileSync('./data/product.json', 'utf-8'))
 const productList=fs.readFileSync("./template/product.html", 'utf-8')
+const productDetailsHTML=fs.readFileSync("./template/product-details.html", 'utf-8')
 
-let productHTMLArray=product.map((prod)=>{
- let output= productList.replace('{{%IMAGE%}}',prod.productImage)
-      output= output.replace('{{%NAME%}}',prod.name)
-      output= output.replace('{{%MODELNAME%}}',prod.modeName)
-      output= output.replace('{{%MODALNUMBER%}}',prod.modelNumber)
-      output= output.replace('{{%SIZE%}}',prod.size)
-      output= output.replace('{{%CAMERA%}}',prod.camera)
-      output= output.replace('{{%PRICE%}}',prod.price)
-      output= output.replace('{{%COLOR%}}',prod.color)
-      output= output.replace('{{%ID%}}',prod.id)
-      return output;
-})
+// let productHTMLArray=product.map((prod)=>{
+//  let output= productList.replace('{{%IMAGE%}}',prod.productImage)
+//       output= output.replace('{{%NAME%}}',prod.name)
+//       output= output.replace('{{%MODELNAME%}}',prod.modeName)
+//       output= output.replace('{{%MODALNUMBER%}}',prod.modelNumber)
+//       output= output.replace('{{%SIZE%}}',prod.size)
+//       output= output.replace('{{%CAMERA%}}',prod.camera)
+//       output= output.replace('{{%PRICE%}}',prod.price)
+//       output= output.replace('{{%COLOR%}}',prod.color)
+//       output= output.replace('{{%ID%}}',prod.id)
+//       return output;
+// })
 // STEP 1 : create A SERVER ********************************
 
 //whenever we are making request to server it getting that request inside this request parameter and request parameter has
 //property called URL.THIS url property is going to store value which user has entered after the root URL.
 
 // in node js we can't use static files.static means which might need in our node application ex:css files,image files,script files.
-const server = http.createServer((request, response) => {
-      let {query,pathname:path}= url.parse(request.url,true) // this true signifies that parse method will pass query string from url
-      //console.log(query,path)
-      //let path = request.url
+// const server = http.createServer((request, response) => {
+//       let {query,pathname:path}= url.parse(request.url,true) // this true signifies that parse method will pass query string from url
+//       //console.log(query,path)
+//       //let path = request.url
 
-    //response.end(path) // this give "/" as output
-    if (path === '/' || path.toLocaleLowerCase() === '/home') {
-        response.writeHead(200, { 'Content-Type': 'text/html'})
-        response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
+//     //response.end(path) // this give "/" as output
+//     if (path === '/' || path.toLocaleLowerCase() === '/home') {
+//         response.writeHead(200, { 'Content-Type': 'text/html'})
+//         response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
         
-    } else if (path.toLocaleLowerCase() === '/about') {
-        response.writeHead(200, {'Content-Type': 'text/html'})
-        response.end(html.replace('{{%CONTENT%}}', "you are in about page"))
-    } else if (path.toLocaleLowerCase() === '/content') {
-        response.writeHead(200, {
-            'Content-Type': 'text/html',
-            'my-header': 'hello world!' //custome header
-        })
-        response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
-    } else if (path.toLocaleLowerCase() === '/products') {
-        if(!query.id){
-            let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
-            response.writeHead(200, { 'Content-Type': 'text/html'})
-            response.end(productListResponse)
-        }else{
-            response.end("the prodcts details having id:" + query.id)
-        }
+//     } else if (path.toLocaleLowerCase() === '/about') {
+//         response.writeHead(200, {'Content-Type': 'text/html'})
+//         response.end(html.replace('{{%CONTENT%}}', "you are in about page"))
+//     } else if (path.toLocaleLowerCase() === '/content') {
+//         response.writeHead(200, {
+//             'Content-Type': 'text/html',
+//             'my-header': 'hello world!' //custome header
+//         })
+//         response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
+//     } else if (path.toLocaleLowerCase() === '/products') {
+//         if(!query.id){
+//             let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
+//             response.writeHead(200, { 'Content-Type': 'text/html'})
+//             response.end(productListResponse)
+//         }else{
+//             response.end("the prodcts details having id:" + query.id)
+//         }
        
-   // console.log( productHTMLArray.join(',')); // using join we get single html file
-    } else {
-        response.writeHead(404, {
-            'Content-Type': 'text/html',
-            'my-header': 'hello world!' //custome header
-        })
-        response.end(html.replace('{{%CONTENT%}}', "404 Error page not found"));
-    }
-})
-//step 2 : start a server
-server.listen(8000, '127.0.0.1', () => {
-    console.log("server is running on port 8000");
-})
+//    // console.log( productHTMLArray.join(',')); // using join we get single html file
+//     } else {
+//         response.writeHead(404, {
+//             'Content-Type': 'text/html',
+//             'my-header': 'hello world!' //custome header
+//         })
+//         response.end(html.replace('{{%CONTENT%}}', "404 Error page not found"));
+//     }
+// })
+// //step 2 : start a server
+// server.listen(8000, '127.0.0.1', () => {
+//     console.log("server is running on port 8000");
+// })
 
 //***************************************************************************************************//
 //***************************************************************************************************//
@@ -149,3 +150,63 @@ server.listen(8000, '127.0.0.1', () => {
 
 //Query string is a key value pair which we specify after a question mark 127.0.0.1:8000/product/id=10&name=iphone in this url id is quert string
 //if we two query string then we & between them.
+function replaceHTML(template,product) {
+    let output= template.replace('{{%IMAGE%}}',product.productImage)
+      output= output.replace('{{%NAME%}}',product.name)
+      output= output.replace('{{%MODELNAME%}}',product.modeName)
+      output= output.replace('{{%MODALNUMBER%}}',product.modelNumber)
+      output= output.replace('{{%SIZE%}}',product.size)
+      output= output.replace('{{%CAMERA%}}',product.camera)
+      output= output.replace('{{%PRICE%}}',product.price)
+      output= output.replace('{{%COLOR%}}',product.color)
+      output= output.replace('{{%ID%}}',product.id)
+      output= output.replace('{{%DESC%}}',product.Description)
+      return output;
+}
+
+const server = http.createServer((request, response) => {
+    let {query,pathname:path}= url.parse(request.url,true) // this true signifies that parse method will pass query string from url
+    //console.log(query,path)
+    //let path = request.url
+
+  //response.end(path) // this give "/" as output
+  if (path === '/' || path.toLocaleLowerCase() === '/home') {
+      response.writeHead(200, { 'Content-Type': 'text/html'})
+      response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
+      
+  } else if (path.toLocaleLowerCase() === '/about') {
+      response.writeHead(200, {'Content-Type': 'text/html'})
+      response.end(html.replace('{{%CONTENT%}}', "you are in about page"))
+  } else if (path.toLocaleLowerCase() === '/content') {
+      response.writeHead(200, {
+          'Content-Type': 'text/html',
+          'my-header': 'hello world!' //custome header
+      })
+      response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
+  } else if (path.toLocaleLowerCase() === '/products') {
+      if(!query.id){
+        let productHTMLArray=product.map((prod)=>{
+            return replaceHTML(productList,prod);
+        })
+          let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
+          response.writeHead(200, { 'Content-Type': 'text/html'})
+          response.end(productListResponse)
+      }else{
+        let prod=product[query.id]
+        let productDetailsHTMLResponse=replaceHTML(productDetailsHTML,prod)
+          response.end(html.replace('{{%CONTENT%}}',productDetailsHTMLResponse))
+      }
+     
+ // console.log( productHTMLArray.join(',')); // using join we get single html file
+  } else {
+      response.writeHead(404, {
+          'Content-Type': 'text/html',
+          'my-header': 'hello world!' //custome header
+      })
+      response.end(html.replace('{{%CONTENT%}}', "404 Error page not found"));
+  }
+})
+//step 2 : start a server
+server.listen(4000, '127.0.0.1', () => {
+  console.log("server is running on port 8000");
+})
