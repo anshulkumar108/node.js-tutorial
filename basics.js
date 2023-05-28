@@ -4,7 +4,7 @@
 const readline = require('readline');
 const fs = require('fs');
 const http = require('http');
-const { Console } = require('console');
+const url=require('url') // this url object has method called parse
 
 // const rl=readline.createInterface({
 //     input: process.stdin,
@@ -92,7 +92,7 @@ let productHTMLArray=product.map((prod)=>{
       output= output.replace('{{%CAMERA%}}',prod.camera)
       output= output.replace('{{%PRICE%}}',prod.price)
       output= output.replace('{{%COLOR%}}',prod.color)
-
+      output= output.replace('{{%ID%}}',prod.id)
       return output;
 })
 // STEP 1 : create A SERVER ********************************
@@ -101,11 +101,12 @@ let productHTMLArray=product.map((prod)=>{
 //property called URL.THIS url property is going to store value which user has entered after the root URL.
 
 // in node js we can't use static files.static means which might need in our node application ex:css files,image files,script files.
-
 const server = http.createServer((request, response) => {
-    let path = request.url
-    //response.end(path) // this give "/" as output
+      let {query,pathname:path}= url.parse(request.url,true) // this true signifies that parse method will pass query string from url
+      //console.log(query,path)
+      //let path = request.url
 
+    //response.end(path) // this give "/" as output
     if (path === '/' || path.toLocaleLowerCase() === '/home') {
         response.writeHead(200, { 'Content-Type': 'text/html'})
         response.end(html.replace('{{%CONTENT%}}',"you are in home page"))
@@ -120,11 +121,15 @@ const server = http.createServer((request, response) => {
         })
         response.end(html.replace('{{%CONTENT%}}', "you are in content page"));
     } else if (path.toLocaleLowerCase() === '/products') {
-        let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
-        response.writeHead(200, { 'Content-Type': 'text/html'})
-        response.end(productListResponse)
+        if(!query.id){
+            let productListResponse=html.replace('{{%CONTENT%}}',productHTMLArray.join(','))
+            response.writeHead(200, { 'Content-Type': 'text/html'})
+            response.end(productListResponse)
+        }else{
+            response.end("the prodcts details having id:" + query.id)
+        }
+       
    // console.log( productHTMLArray.join(',')); // using join we get single html file
-
     } else {
         response.writeHead(404, {
             'Content-Type': 'text/html',
@@ -133,9 +138,14 @@ const server = http.createServer((request, response) => {
         response.end(html.replace('{{%CONTENT%}}', "404 Error page not found"));
     }
 })
-
 //step 2 : start a server
-
 server.listen(8000, '127.0.0.1', () => {
     console.log("server is running on port 8000");
 })
+
+//***************************************************************************************************//
+//***************************************************************************************************//
+//**PARSING QUERY STRING FROM URL**//
+
+//Query string is a key value pair which we specify after a question mark 127.0.0.1:8000/product/id=10&name=iphone in this url id is quert string
+//if we two query string then we & between them.

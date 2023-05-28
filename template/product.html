@@ -12,11 +12,11 @@
         </div>
     </div>
     <div class="products-detail">
-        <div class="product-info"><h4>{{%PRICE%}}</h4></div>
-        <div class="product-info"><h4>{{%COLOR%}}</h4></div>
+        <div class="product-info"><h4><span>price:</span>${{%PRICE%}}</h4></div>
+        <div class="product-info"><h4><span>color:</span>{{%COLOR%}}</h4></div>
         <div class="product-info">
-            <button class="btn btn-primary">Buy Now</button>
-            <button class="btn btn-secondary">Show Details</button>
+            <!-- <button class="btn btn-primary">Buy Now</button> -->
+            <a href="/products?id={{%ID%}}" class="btn btn-secondary">Show Details</a>
         </div>
     </div>
 </div>
