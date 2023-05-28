@@ -5,7 +5,7 @@ const readline = require('readline');
 const fs = require('fs');
 const http = require('http');
 const url=require('url') // this url object has method called parse
-
+const replaceHTML =require('./MODULE/replaceHtml.js')
 // const rl=readline.createInterface({
 //     input: process.stdin,
 //     output: process.stdout,
@@ -84,6 +84,7 @@ const product = JSON.parse(fs.readFileSync('./data/product.json', 'utf-8'))
 const productList=fs.readFileSync("./template/product.html", 'utf-8')
 const productDetailsHTML=fs.readFileSync("./template/product-details.html", 'utf-8')
 
+
 // let productHTMLArray=product.map((prod)=>{
 //  let output= productList.replace('{{%IMAGE%}}',prod.productImage)
 //       output= output.replace('{{%NAME%}}',prod.name)
@@ -150,19 +151,19 @@ const productDetailsHTML=fs.readFileSync("./template/product-details.html", 'utf
 
 //Query string is a key value pair which we specify after a question mark 127.0.0.1:8000/product/id=10&name=iphone in this url id is quert string
 //if we two query string then we & between them.
-function replaceHTML(template,product) {
-    let output= template.replace('{{%IMAGE%}}',product.productImage)
-      output= output.replace('{{%NAME%}}',product.name)
-      output= output.replace('{{%MODELNAME%}}',product.modeName)
-      output= output.replace('{{%MODALNUMBER%}}',product.modelNumber)
-      output= output.replace('{{%SIZE%}}',product.size)
-      output= output.replace('{{%CAMERA%}}',product.camera)
-      output= output.replace('{{%PRICE%}}',product.price)
-      output= output.replace('{{%COLOR%}}',product.color)
-      output= output.replace('{{%ID%}}',product.id)
-      output= output.replace('{{%DESC%}}',product.Description)
-      return output;
-}
+// function replaceHTML(template,product) {
+//     let output= template.replace('{{%IMAGE%}}',product.productImage)
+//       output= output.replace('{{%NAME%}}',product.name)
+//       output= output.replace('{{%MODELNAME%}}',product.modeName)
+//       output= output.replace('{{%MODALNUMBER%}}',product.modelNumber)
+//       output= output.replace('{{%SIZE%}}',product.size)
+//       output= output.replace('{{%CAMERA%}}',product.camera)
+//       output= output.replace('{{%PRICE%}}',product.price)
+//       output= output.replace('{{%COLOR%}}',product.color)
+//       output= output.replace('{{%ID%}}',product.id)
+//       output= output.replace('{{%DESC%}}',product.Description)
+//       return output;
+// }
 
 const server = http.createServer((request, response) => {
     let {query,pathname:path}= url.parse(request.url,true) // this true signifies that parse method will pass query string from url
@@ -194,7 +195,7 @@ const server = http.createServer((request, response) => {
       }else{
         let prod=product[query.id]
         let productDetailsHTMLResponse=replaceHTML(productDetailsHTML,prod)
-          response.end(html.replace('{{%CONTENT%}}',productDetailsHTMLResponse))
+          response.end(html.replace('{{%CONTENT%}}', productDetailsHTMLResponse))
       }
      
  // console.log( productHTMLArray.join(',')); // using join we get single html file
@@ -207,6 +208,10 @@ const server = http.createServer((request, response) => {
   }
 })
 //step 2 : start a server
-server.listen(4000, '127.0.0.1', () => {
+server.listen(3000, '127.0.0.1', () => {
   console.log("server is running on port 8000");
 })
+
+//*****************************************************************************************//
+//************************************************************//
+//CREATEING USER DEFINED MODULE //////////////////////////////////
